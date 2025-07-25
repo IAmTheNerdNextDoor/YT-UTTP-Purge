@@ -1020,10 +1020,7 @@ def main():
     print(f"{a2}{styleOther} 6. Scan both {usernameTextColor}usernames{F.R} and {textColor}comment text{F.R} for criteria you choose{S.R}")
     print(f"{a2}{styleOther} 7. ASCII Mode: Scan usernames for {asciiColor}ANY non-ASCII special characters{F.R} (May cause collateral damage!){S.R}")
 
-
-    if userNotChannelOwner == True and moderator_mode == False:
-      print(f" {F.LIGHTRED_EX}*Note: With 'Not Your Channel Mode' enabled, you can only report matched comments while using 'Auto-Smart Mode' \n        or 'Sensitive-Smart Mode'.{S.R}") # Based on filterModesAllowedforNonOwners
-    elif userNotChannelOwner == True and moderator_mode == True:
+    if userNotChannelOwner == True and moderator_mode == True:
       print(f" {F.LIGHTRED_EX}*Note: With 'Moderator Mode', you can Hold and/or Report using: 'Auto-Smart', 'Sensitive-Smart', and Channel ID modes.{S.R}")
     # Make sure input is valid, if not ask again
     validFilterMode = False
