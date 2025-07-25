@@ -283,7 +283,7 @@ def prepare_filter_mode_smart(scanMode, config, miscData, sensitive=False):
   spamThreadsList = miscData.spamLists['spamThreadsList'] # List of filters associated with spam threads from crowd sourced list
   spamAccountsList = miscData.spamLists['spamAccountsList'] # List of mentioned instagram/telegram scam accounts from crowd sourced list
   spamListsVersion = miscData.spamLists['latestLocalVersion']
-  
+
   utf_16 = "utf-8"
   if config['filter_mode'] == "autosmart":
     pass
@@ -302,7 +302,7 @@ def prepare_filter_mode_smart(scanMode, config, miscData, sensitive=False):
       print(f" > {F.LIGHTRED_EX}NOTE:{S.R} In sensitive mode, {F.LIGHTRED_EX}expect more false positives{S.R}. Recommended to run this AFTER regular Auto Smart Mode.\n")
     input("Press Enter to Begin Scanning...")
     print ("\033[A                                     \033[A") # Erases previous line
-    
+
   print("  Loading Filters  [                              ]", end="\r")
 
   # Create Variables
@@ -391,7 +391,7 @@ def prepare_filter_mode_smart(scanMode, config, miscData, sensitive=False):
   usernameConfuseRegex = re.compile(confusable_regex(miscData.channelOwnerName))
   m = bufferMatch
   a = addBuffers
-  
+
 
   print("  Loading Filters  [==============                ]", end="\r")
 
@@ -410,28 +410,37 @@ def prepare_filter_mode_smart(scanMode, config, miscData, sensitive=False):
   sensitiveRootDomainRegex = re.compile(sensitivePrepString)
   print("  Loading Filters  [===================           ]", end="\r")
 
-  spamListExpressionsList = []
+  spamDomainsExpressionsList = []
+  spamAccountsExpressionsList = []
   spamThreadsExpressionsList = []
-  combinedCompiledFilename = "spamListCombinedRegex"
+  domainsCompiledFilename = "spamDomainsRegex"
+  accountsCompiledFilename = "spamAccountsRegex"
   threadsCompiledFilename = "spamThreadsRegex"
-  
+
   ### Prepare spam lists ###
-  
+
   # Get compiled regex from files if available
-  spamListCombinedRegex = files.read_compiled_regex_pickle(fileNameBase=combinedCompiledFilename, latestListVersion = spamListsVersion)
+  spamDomainsRegex = files.read_compiled_regex_pickle(fileNameBase=domainsCompiledFilename, latestListVersion = spamListsVersion)
+  spamAccountsRegex = files.read_compiled_regex_pickle(fileNameBase=accountsCompiledFilename, latestListVersion = spamListsVersion)
   spamThreadsRegex = files.read_compiled_regex_pickle(fileNameBase=threadsCompiledFilename, latestListVersion = spamListsVersion)
-  
+
   # If no pre-compiled regex available, compile it and save to file for later
-  if not spamListCombinedRegex:
-    print("  Compiling domain and account lists, this only needs to be done after lists are updated...")
+  if not spamDomainsRegex:
+    print("  Compiling domain lists, this only needs to be done after lists are updated...")
     print("  Loading Filters  [=======================       ]", end="\r")
     for domain in spamDomainsList:
-      spamListExpressionsList.append(confusable_regex(domain.upper().replace(".", "⚫"), include_character_padding=False).replace("(?:⚫)", "(?:[^a-zA-Z0-9 ]{1,2})"))
+      spamDomainsExpressionsList.append(confusable_regex(domain.upper().replace(".", "⚫"), include_character_padding=False).replace("(?:⚫)", "(?:[^a-zA-Z0-9 ]{1,2})"))
+    spamDomainsRegex = re.compile('|'.join(spamDomainsExpressionsList))
+    files.save_compiled_regex_pickle(compiled_input=spamDomainsRegex, latestListVersion=spamListsVersion, fileNameBase="spamDomainsRegex")
+
+  if not spamAccountsRegex:
+    print("  Compiling account lists, this only needs to be done after lists are updated...")
+    print("  Loading Filters  [=======================       ]", end="\r")
     for account in spamAccountsList:
-      spamListExpressionsList.append(confusable_regex(account.upper(), include_character_padding=True).replace(m, a))
-    spamListCombinedRegex = re.compile('|'.join(spamListExpressionsList))
-    files.save_compiled_regex_pickle(compiled_input=spamListCombinedRegex, latestListVersion=spamListsVersion, fileNameBase="spamListCombinedRegex")
-    
+      spamAccountsExpressionsList.append(confusable_regex(account.upper(), include_character_padding=True).replace(m, a))
+    spamAccountsRegex = re.compile('|'.join(spamAccountsExpressionsList))
+    files.save_compiled_regex_pickle(compiled_input=spamAccountsRegex, latestListVersion=spamListsVersion, fileNameBase="spamAccountsRegex")
+
   if not spamThreadsRegex:
     print("  Compiling spam thread lists, this only needs to be done after lists are updated...")
     print("  Loading Filters  [==========================    ]", end="\r")
@@ -474,7 +483,8 @@ def prepare_filter_mode_smart(scanMode, config, miscData, sensitive=False):
     'sensitive': sensitive,
     'sensitiveRootDomainRegex': sensitiveRootDomainRegex,
     'unicodeCategoriesStrip': unicodeCategoriesStrip,
-    'spamListCombinedRegex': spamListCombinedRegex,
+    'spamDomainsRegex': spamDomainsRegex,
+    'spamAccountsRegex': spamAccountsRegex,
     'spamThreadsRegex': spamThreadsRegex,
     'threadFiltersDict': threadFiltersDict,
     'accompanyingLinkSpamDict': accompanyingLinkSpamDict,
