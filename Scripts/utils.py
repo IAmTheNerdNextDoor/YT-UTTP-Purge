@@ -5,10 +5,11 @@ import Scripts.validation as validation
 import Scripts.auth as auth
 from googleapiclient.errors import HttpError
 from html import unescape
+import shutil
 
 ##########################################################################################
 ############################## UTILITY FUNCTIONS #########################################
-########################################################################################## 
+##########################################################################################
 
 ################################### GET VIDEO TITLE ###############################################
 # Check if video title is in dictionary, if not get video title from video ID using YouTube API request, then return title
@@ -66,19 +67,19 @@ def make_char_set(stringInput, stripLettersNumbers=False, stripKeyboardSpecialCh
     if stripPunctuation == True:
       punctuationChars = ("!?\".,;:'-/()")
       charsToStrip += punctuationChars
-    
+
     # Adds characters to dictionary to use with translate to remove these characters
     for c in charsToStrip:
       translateDict[ord(c)] = None
     translateDict[ord("\ufe0f")] = None # Strips invisible varation selector for emojis
-    
+
     # Removes charsToStrip from string
     stringInput = stringInput.translate(translateDict)
     listedInput = list(stringInput)
-    
+
     return set(filter(None, listedInput))
 
-######################### Check List Against String #########################    
+######################### Check List Against String #########################
 # Checks if any items in a list are a substring of a string
 def check_list_against_string(listInput, stringInput, caseSensitive=False):
   if caseSensitive == False:
@@ -88,7 +89,7 @@ def check_list_against_string(listInput, stringInput, caseSensitive=False):
     return True
   else:
     return False
-  
+
 ######################### Clear multiple previous lines #########################
 def clear_lines(up, down=0):
     LINE_UP = '\033[1A'
@@ -104,14 +105,14 @@ def clear_lines(up, down=0):
 def string_to_list(rawString, lower=False):
   if lower == True:
     rawString = rawString.lower()
-  
+
   # Remove whitespace
   newList = rawString.split(",")
   for i in range(len(newList)):
     newList[i] =  newList[i].strip()
 
   # Remove empty strings from list
-  newList = list(filter(None, newList)) 
+  newList = list(filter(None, newList))
   return newList
 
 
@@ -135,8 +136,8 @@ def process_spammer_ids(rawString):
     if valid == False:
       print(f"{B.RED}{F.BLACK}Invalid{S.R} Channel ID or Link: " + str(inputList[i]) + "\n")
       return False, None
-  
-  return True, IDList  
+
+  return True, IDList
 
 
 ########################## Expand Number Ranges #############################
@@ -147,8 +148,8 @@ def expand_ranges(stringInput):
             str(i) for i in range(
                 int(match.group(1)),
                 int(match.group(2)) + 1
-            )   
-        ),  
+            )
+        ),
         stringInput
     )
 
@@ -174,7 +175,7 @@ def choice(message="", bypass=False):
       return None
     else:
       print("\nInvalid Input. Enter Y or N  --  Or enter X to return to main menu.")
-      
+
 ########################## Get Console Window Width #############################
 # To determine how many characters to print in a line
 def get_terminal_size():
