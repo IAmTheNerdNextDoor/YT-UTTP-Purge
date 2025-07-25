@@ -145,7 +145,7 @@ def main():
     }
   }
 
-  print("Checking for updates to program and spam lists...")
+  # print("Checking for updates to program and spam lists...")
   # Check if resources, spam list, and filters folders exist, and create them
   if not os.path.isdir(resourceFolder):
     try:
@@ -249,24 +249,24 @@ def main():
     input("\nPress Enter to Continue...")
     updateReleaseChannel = "all"
 
-  if config['auto_check_update'] == True:
-    try:
-      updateAvailable = files.check_for_update(version, updateReleaseChannel, silentCheck=True, )
-    except Exception as e:
-      print(f"{F.LIGHTRED_EX}Error Code U-3 occurred while checking for updates. (Checking can be disabled using the config file setting) Continuing...{S.R}\n")
-      updateAvailable = None
+  # if config['auto_check_update'] == True:
+  #   try:
+  #     updateAvailable = files.check_for_update(version, updateReleaseChannel, silentCheck=True, )
+  #   except Exception as e:
+  #     print(f"{F.LIGHTRED_EX}Error Code U-3 occurred while checking for updates. (Checking can be disabled using the config file setting) Continuing...{S.R}\n")
+  #     updateAvailable = None
 
-    # Only check for updates once a day, compare current date to last checked date
-    if datetime.today() > datetime.strptime(spamListDict['Meta']['VersionInfo']['LastChecked'], '%Y.%m.%d.%H.%M')+timedelta(days=1):
-      # Check for update to filter variables file
-      # filterFileUpdated, filterListDict = files.check_for_filter_update(filterListDict, silentCheck=True) # Returned variables aren't used anywhere
-      files.check_for_filter_update(filterListDict, silentCheck=True)
-      # Check spam lists if today or tomorrow's date is later than the last update date (add day to account for time zones)
-      if datetime.today()+timedelta(days=1) >= datetime.strptime(spamListDict['Meta']['VersionInfo']['LatestLocalVersion'], '%Y.%m.%d'):
-        spamListDict = files.check_lists_update(spamListDict, silentCheck=True)        
+  #   # Only check for updates once a day, compare current date to last checked date
+  #   if datetime.today() > datetime.strptime(spamListDict['Meta']['VersionInfo']['LastChecked'], '%Y.%m.%d.%H.%M')+timedelta(days=1):
+  #     # Check for update to filter variables file
+  #     # filterFileUpdated, filterListDict = files.check_for_filter_update(filterListDict, silentCheck=True) # Returned variables aren't used anywhere
+  #     files.check_for_filter_update(filterListDict, silentCheck=True)
+  #     # Check spam lists if today or tomorrow's date is later than the last update date (add day to account for time zones)
+  #     if datetime.today()+timedelta(days=1) >= datetime.strptime(spamListDict['Meta']['VersionInfo']['LatestLocalVersion'], '%Y.%m.%d'):
+  #       spamListDict = files.check_lists_update(spamListDict, silentCheck=True)
 
-  else:
-    updateAvailable = False
+  # else:
+  #   updateAvailable = False
 
   # In all scenarios, load spam lists into memory
   for x, spamList in spamListDict['Lists'].items():
@@ -412,32 +412,32 @@ def main():
     utils.clear_terminal()
 
     # -----------------------------------------------------------------------------------------------------------------------------
-    if updateAvailable != False:
-      updateStringLabel = "Update Available: "
-      if updateAvailable == True: # Stable update available
-        updateString = f"{B.LIGHTGREEN_EX}{F.BLACK} Yes {S.R}"
+    # if updateAvailable != False:
+    #   updateStringLabel = "Update Available: "
+    #   if updateAvailable == True: # Stable update available
+    #     updateString = f"{B.LIGHTGREEN_EX}{F.BLACK} Yes {S.R}"
 
-      elif updateAvailable == "beta": # Beta Update Available
-        if updateReleaseChannel == "stable":
-          updateStringLabel = ""
-          updateString = ""
-        else:
-          updateString = f"{B.LIGHTCYAN_EX}{F.BLACK} Beta {S.R}"
-      elif updateAvailable == None:
-        updateString = f"{F.LIGHTRED_EX}Error{S.R}"
-        print("> Note: Error during check for updates. Select 'Check For Updates' for details.")
+    #   elif updateAvailable == "beta": # Beta Update Available
+    #     if updateReleaseChannel == "stable":
+    #       updateStringLabel = ""
+    #       updateString = ""
+    #     else:
+    #       updateString = f"{B.LIGHTCYAN_EX}{F.BLACK} Beta {S.R}"
+    #   elif updateAvailable == None:
+    #     updateString = f"{F.LIGHTRED_EX}Error{S.R}"
+    #     print("> Note: Error during check for updates. Select 'Check For Updates' for details.")
 
-    else:
-      if config['auto_check_update'] == False:
-        updateStringLabel = "Update Checking: "
-        updateString = "Off"
-      else:
-        updateStringLabel = ""
-        updateString = ""
+    # else:
+    #   if config['auto_check_update'] == False:
+    #     updateStringLabel = "Update Checking: "
+    #     updateString = "Off"
+    #   else:
+    #     updateStringLabel = ""
+    #     updateString = ""
 
-    # User selects scanning mode,  while Loop to get scanning mode, so if invalid input, it will keep asking until valid input
-    print("\n{:<59}{:<18}{:>7}".format("> At any prompt, enter 'X' to return here", updateStringLabel, updateString))
-    print("> Enter 'Q' now to quit")
+    # # User selects scanning mode,  while Loop to get scanning mode, so if invalid input, it will keep asking until valid input
+    # print("\n{:<59}{:<18}{:>7}".format("> At any prompt, enter 'X' to return here", updateStringLabel, updateString))
+    # print("> Enter 'Q' now to quit")
 
     print(f"\n\n-------------------------------- {F.YELLOW}Scanning Options{S.R} --------------------------------")
     print(f"      1. Scan {F.LIGHTCYAN_EX}specific videos{S.R}")
@@ -449,8 +449,8 @@ def main():
     print(f"      6. Create your own {F.LIGHTGREEN_EX}config file(s){S.R} to run the program with pre-set settings")
     print(f"      7. Remove comments using a {F.LIGHTRED_EX}pre-existing list{S.R} or log file")
     print(f"      8. Recover deleted comments using log file")
-    print(f"      9. Check & Download {F.LIGHTCYAN_EX}Updates{S.R}")
-    print(f"      10. {F.BLACK}{B.LIGHTGREEN_EX} NEW! {S.R} Helpful Tools")
+    # print(f"      9. Check & Download {F.LIGHTCYAN_EX}Updates{S.R}")
+    print(f"      9. {F.BLACK}{B.LIGHTGREEN_EX} NEW! {S.R} Helpful Tools")
     print("")
 
 
@@ -462,7 +462,7 @@ def main():
       if validConfigSetting == True and config and config['scan_mode'] != 'ask':
         scanMode = config['scan_mode']
       else:
-        scanMode = input("Choice (1-10): ")
+        scanMode = input("Choice (1-9): ")
       if scanMode.lower() == "q":
         sys.exit()
 
@@ -486,9 +486,9 @@ def main():
           scanMode = "commentList"
         elif scanMode == "8":
           scanMode = "recoverMode"
+        # elif scanMode == "9":
+        #   scanMode = "checkUpdates"
         elif scanMode == "9":
-          scanMode = "checkUpdates"
-        elif scanMode == "10":
           scanMode = "tools"
         elif scanMode == "debug":
           scanMode = "showDebugInfo"
@@ -958,7 +958,7 @@ def main():
       result = user_tools.user_tools_menu(config)
       if str(result) == "MainMenu":
         return True
-      
+
     elif scanMode == "showDebugInfo":
       # Print info about the current instance
       print(f"\n{F.YELLOW}Debug Info:{S.R}")
@@ -978,10 +978,10 @@ def main():
       print(f"  - Current Working Directory: " + os.getcwd())
       if hasattr(sys, '_MEIPASS'): # If running as a pyinstaller bundle
         print(f"  - Running as pyinstaller. Path: " + sys._MEIPASS)
-      
+
       input("\nPress Enter to return to main menu...")
       return True
-      
+
 
 # ====================================================================================================================================================================================================
 # ====================================================================================================================================================================================================
@@ -1254,7 +1254,7 @@ def main():
             spacesStr = ""
           utils.clear_lines(up=1, down=0)
           print(f"Scanning {i}/{len(videosToScan)}: " + videoTitle + spacesStr + "\n")
-          
+
         if currentVideoDict is None:
           currentVideoDict = {}
         nextPageToken, currentVideoDict = operations.get_comments(current, filtersDict, miscData, config, currentVideoDict, scanVideoID, videosToScan=videosToScan)
@@ -1376,15 +1376,6 @@ def main():
       filterModesAllowedforNonOwners = ["AutoSmart", "SensitiveSmart"]
     elif moderator_mode == True:
       filterModesAllowedforNonOwners = ["AutoSmart", "SensitiveSmart", 'ID']
-
-    # If user isn't channel owner and not using allowed filter mode, skip deletion
-    if userNotChannelOwner == True and filterMode not in filterModesAllowedforNonOwners:
-      confirmDelete = False
-      deletionEnabled = False
-      print(f"{F.LIGHTRED_EX}Error:{S.R}To prevent abuse, even in moderator mode, you can only use filter modes: Auto Smart, Sensitive Smart, and ID")
-      response = input("Press Enter to Continue, or type 'x' to return to Main Menu...")
-      if response.lower() == 'x':
-        return True
 
     # Test skip_deletion preference - If passes both, will either delete or ask user to delete
     if config['skip_deletion'] == True:
@@ -1640,7 +1631,7 @@ def main():
           'logMode': logMode,
           'logFileContents': logFileContents,
           'jsonSettingsDict': jsonSettingsDict,
-          'filtersDict': filtersDict 
+          'filtersDict': filtersDict
           }
         logging.rewrite_log_file(current, logInfo, combinedCommentDict)
       print("Updating log file, please wait...", end="\r")
